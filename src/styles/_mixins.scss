@@ -1,0 +1,14 @@
+// src/styles/_mixins.scss
+@mixin typography(
+  $size,
+  $weight,
+  $line-height,
+  $letter-spacing: 0
+) {
+  font-family: 'Geometria', sans-serif;
+  font-size: $size;
+  font-weight: $weight;
+  line-height: $line-height;
+  letter-spacing: $letter-spacing;
+}
+

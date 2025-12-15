@@ -1,0 +1,29 @@
+@use '@/styles/mixins' as *;
+
+.h1 {
+  @include typography(32px, 800, 40px);
+}
+
+.h2 {
+  @include typography(24px, 700, 32px);
+}
+
+.h3 {
+  @include typography(20px, 700, 28px);
+}
+
+.body {
+  @include typography(16px, 400, 24px);
+}
+
+.small {
+  @include typography(14px, 400, 20px);
+}
+
+.button {
+  @include typography(14px, 700, 16px, 0.05em);
+}
+
+.uppercase {
+  text-transform: uppercase;
+}

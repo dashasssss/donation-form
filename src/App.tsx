@@ -1,9 +1,7 @@
+import DonationForm from './pages/DonationForm';
+
 function App() {
-  return (
-    <div>
-      Donation Form
-    </div>
-  );
+  return <DonationForm />;
 }
 
 export default App;

@@ -1,8 +1,6 @@
-* {
-  box-sizing: border-box;
-}
+@import './styles/_fonts.scss';
+@import './styles/_resets.scss';
 
 body {
-  margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Geometria', system-ui, -apple-system, sans-serif;
 }
