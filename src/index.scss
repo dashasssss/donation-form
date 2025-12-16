@@ -1,0 +1,9 @@
+@use './styles/variables' as *;
+@use './styles/fonts';
+@use './styles/resets';
+@use './styles/grid';
+
+body {
+  font-family: 'Geometria', system-ui, -apple-system, sans-serif;
+  color: $color-primary;
+}

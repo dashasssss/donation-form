@@ -1,7 +1,11 @@
-import DonationForm from './pages/DonationForm';
+import {DonationForm} from './pages/DonationForm';
 
 function App() {
-  return <DonationForm />;
+  return (
+    <main className="container">
+      <DonationForm />
+    </main>
+  );
 }
 
 export default App;

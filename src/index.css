@@ -1,6 +1,0 @@
-@import './styles/_fonts.scss';
-@import './styles/_resets.scss';
-
-body {
-  font-family: 'Geometria', system-ui, -apple-system, sans-serif;
-}

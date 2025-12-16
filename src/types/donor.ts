@@ -1,0 +1,1 @@
+export type DonorType = 'person' | 'company';

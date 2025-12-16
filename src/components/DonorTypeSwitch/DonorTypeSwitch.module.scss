@@ -1,0 +1,37 @@
+@use '../../styles/variables' as *;
+
+.switch {
+  display: inline-flex;
+  border-radius: 6px;
+  border: 2px solid $color-primary;
+  overflow: hidden;
+  background-color: #fff;
+}
+
+.option {
+  min-width: 100px;
+  padding: 12px 24px;
+
+  background: transparent;
+  border: none;
+
+  font-size: 14px;
+  font-weight: 500;
+  color: $color-primary;
+
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+
+  &:hover {
+    background-color: #eef2ff;
+  }
+}
+
+.active {
+  background-color: $color-primary;
+  color: #fff;
+
+  &:hover {
+    background-color: $color-primary;
+  }
+}

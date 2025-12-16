@@ -8,7 +8,8 @@ export type TypographyVariant =
   | 'h3'
   | 'h4'
   | 'button'
-  | 'body';
+  | 'body'
+  | 'small';
 
 type TypographyOwnProps<T extends ElementType = 'span'> = {
   as?: T;

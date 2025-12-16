@@ -1,0 +1,18 @@
+@use './variables' as *;
+@use './mixins' as *;
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $grid-gutter;
+
+  @include tablet {
+    grid-template-columns: repeat(12, 1fr);
+  }
+
+  @include desktop {
+    max-width: $container-desktop;
+    margin-inline: auto;
+    grid-template-columns: repeat(24, 1fr);
+  }
+}
