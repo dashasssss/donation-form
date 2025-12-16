@@ -5,7 +5,7 @@
   border-radius: 6px;
   border: 2px solid $color-primary;
   overflow: hidden;
-  background-color: #fff;
+  background-color: $color-white;
 }
 
 .option {
@@ -20,7 +20,10 @@
   color: $color-primary;
 
   cursor: pointer;
-  transition: background-color 0.2s, color 0.2s;
+
+  transition:
+    background-color 0.7s ease,
+    color 0.7s ease;
 
   &:hover {
     background-color: #eef2ff;
@@ -29,7 +32,7 @@
 
 .active {
   background-color: $color-primary;
-  color: #fff;
+  color: $color-white;
 
   &:hover {
     background-color: $color-primary;

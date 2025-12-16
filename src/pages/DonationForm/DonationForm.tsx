@@ -1,7 +1,7 @@
-import { Input } from '../components/Input/Input';
-import { Typography } from '../components/Typography';
+import { Input } from '../../components/Input/Input';
+import { Typography } from '../../components/Typography';
 import styles from './DonationForm.module.scss';
-import { DonorTypeSwitch } from '../components/DonorTypeSwitch/DonorTypeSwitch';
+import { DonorTypeSwitch } from '../../components/DonorTypeSwitch/DonorTypeSwitch';
 import { useState } from 'react';
 
 export const DonationForm = () => {

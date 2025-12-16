@@ -1,0 +1,102 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.tab {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+
+  align-items: center;
+  gap: 15px;
+
+  position: relative;
+
+  padding: 14px 20px;
+
+  cursor: pointer;
+
+  color: $color-secondary-primary;
+  font-weight: 600;
+
+  transition: all 0.5s ease;
+
+  &.active {
+    color: $color-primary;
+
+    .icon {
+      background: $color-accent;
+      color: $color-white;
+    }
+  }
+}
+
+.icon {
+  width: 70px;
+  height: 70px;
+
+  padding: 10px;
+  border-radius: 8px;
+
+  border: 2px solid $color-secondary;
+  color: $color-secondary;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: all 0.5s ease;
+
+  svg {
+    width: 100%;
+    height: 100%;
+    stroke: currentColor;
+    fill: none;
+  }
+
+  &:hover {
+    background: #d3b5d2;
+    color: $color-white;
+    border: 2px solid transparent;
+  }
+}
+
+.active {
+  .icon {
+    background: $color-accent;
+    color: $color-white;
+  }
+}
+
+.tab {
+  @include desktop {
+    &.active::after,
+    &.active::before {
+      content: '';
+      position: absolute;
+      left: 19%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+    }
+
+    &.active::after {
+      bottom: -2px;
+
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-bottom: 10px solid white;
+    }
+
+    &.active::before {
+      bottom: 0px;
+
+      border-left: 9px solid transparent;
+      border-right: 9px solid transparent;
+      border-bottom: 9px solid $color-secondary-primary;
+    }
+  }
+}
+
+.label {
+  text-align: left;
+}

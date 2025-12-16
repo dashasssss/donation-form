@@ -1,0 +1,125 @@
+@use '../../styles/grid';
+@use '../../styles/mixins' as *;
+@use '../../styles/variables' as *;
+
+.title {
+  text-align: center;
+  margin: 48px 0 30px;
+}
+
+.subtitle{
+  margin-top: 15px
+}
+
+.grid {
+  @extend .grid;
+  margin-top: 40px;
+}
+
+.tabsWrapper {
+  grid-column: span 4;
+  padding: 0 34px;
+
+  display: grid;
+  gap: 16px;
+
+  @include tablet {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include desktop {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.paymentSection {
+  max-width: $container-desktop;
+  margin-inline: auto;
+  padding-inline: 24px;
+  margin-bottom: 48px;
+}
+
+.paymentGrid {
+  @extend .grid;
+  padding: 24px;
+  border-radius: 24px;
+  border: 1px solid $color-secondary-primary;
+  margin-top: 0;
+  color: $color-secondary;
+}
+
+.methods {
+  grid-column: 1 / -1;
+
+  @include tablet {
+    grid-column: 1 / 6;
+  }
+
+  @include desktop {
+    grid-column: 1 / 15;
+  }
+}
+
+.methodsGrid {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+
+  gap: 16px;
+  margin-top: 16px;
+
+  @include tablet {
+    flex-direction: row;
+  }
+
+  @include desktop {
+    flex-direction: row;
+  }
+}
+
+.cardForm {
+  grid-column: span 4;
+
+  @include tablet {
+    grid-column: 7 / -1;
+    margin-top: 0;
+  }
+
+  @include desktop {
+    grid-column: 16 / -1;
+  }
+}
+
+.cardBox {
+  background: $color-secondary-primary;
+  border-radius: 24px;
+  padding: 24px;
+  margin-top: 16px;
+}
+
+.cardField {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: $color-white;
+}
+
+.cardNumber {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.cardRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 25px;
+
+  & label {
+    color: $color-white;
+    @include typography(16px, 400, 24px);
+  }
+}
