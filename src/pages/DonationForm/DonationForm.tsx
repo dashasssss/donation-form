@@ -202,7 +202,9 @@ export const DonationForm = () => {
                   label="Імʼя"
                   value={values.firstName}
                   error={errors.firstName ?? undefined}
-                  ref={(el) => (inputRefs.current.firstName = el)}
+                  ref={(el) => {
+                    inputRefs.current.firstName = el;
+                  }}
                   onChange={(e) =>
                     setValues((v) => ({ ...v, firstName: e.target.value }))
                   }
@@ -212,7 +214,9 @@ export const DonationForm = () => {
                   label="Фамілія"
                   value={values.lastName}
                   error={errors.lastName ?? undefined}
-                  ref={(el) => (inputRefs.current.lastName = el)}
+                  ref={(el) => {
+                    inputRefs.current.lastName = el;
+                  }}
                   onChange={(e) =>
                     setValues((v) => ({ ...v, lastName: e.target.value }))
                   }
@@ -247,7 +251,9 @@ export const DonationForm = () => {
                 label="Email-адрес"
                 value={values.email}
                 error={errors.email ?? undefined}
-                ref={(el) => (inputRefs.current.email = el)}
+                ref={(el) => {
+                  inputRefs.current.email = el;
+                }}
                 onChange={(e) =>
                   setValues((v) => ({ ...v, email: e.target.value }))
                 }
@@ -257,7 +263,9 @@ export const DonationForm = () => {
                 label="Номер телефону"
                 value={values.phone}
                 error={errors.phone ?? undefined}
-                ref={(el) => (inputRefs.current.phone = el)}
+                ref={(el) => {
+                  inputRefs.current.phone = el;
+                }}
                 onChange={(e) =>
                   setValues((v) => ({ ...v, phone: e.target.value }))
                 }
@@ -270,7 +278,9 @@ export const DonationForm = () => {
                 label="Країна"
                 value={values.country}
                 error={errors.country ?? undefined}
-                ref={(el) => (inputRefs.current.country = el)}
+                ref={(el) => {
+                  inputRefs.current.country = el;
+                }}
                 onChange={(e) =>
                   setValues((v) => ({ ...v, country: e.target.value }))
                 }
@@ -281,7 +291,9 @@ export const DonationForm = () => {
                   label="Місто"
                   value={values.city}
                   error={errors.city ?? undefined}
-                  ref={(el) => (inputRefs.current.city = el)}
+                  ref={(el) => {
+                    inputRefs.current.city = el;
+                  }}
                   onChange={(e) =>
                     setValues((v) => ({ ...v, city: e.target.value }))
                   }
@@ -295,9 +307,9 @@ export const DonationForm = () => {
                   ref={(el) => {
                     inputRefs.current.state = el;
                   }}
-                    onChange={(e) =>
-                      setValues((v) => ({ ...v, state: e.target.value }))
-                    }
+                  onChange={(e) =>
+                    setValues((v) => ({ ...v, state: e.target.value }))
+                  }
                   onKeyDown={handleEnter('state', 'address')}
                 />
               </div>
@@ -308,9 +320,9 @@ export const DonationForm = () => {
                 ref={(el) => {
                   inputRefs.current.address = el;
                 }}
-                  onChange={(e) =>
-                    setValues((v) => ({ ...v, address: e.target.value }))
-                  }
+                onChange={(e) =>
+                  setValues((v) => ({ ...v, address: e.target.value }))
+                }
                 onKeyDown={handleEnter('address', 'zip')}
               />
               <div className={styles.row2}>
@@ -321,9 +333,9 @@ export const DonationForm = () => {
                   ref={(el) => {
                     inputRefs.current.zip = el;
                   }}
-                    onChange={(e) =>
-                      setValues((v) => ({ ...v, zip: e.target.value }))
-                    }
+                  onChange={(e) =>
+                    setValues((v) => ({ ...v, zip: e.target.value }))
+                  }
                   onKeyDown={handleEnter('zip')}
                 />
               </div>
