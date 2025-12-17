@@ -15,7 +15,7 @@
   border: none;
   cursor: pointer;
 
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 
   width: 100%;
 
@@ -31,16 +31,29 @@
   &.active {
     background: $color-accent;
   }
+
+  &:hover {
+    background: $color-secondary-accent;
+  }
 }
 
 .iconWrapper {
   display: flex;
   align-items: center;
   justify-content: center;
+  fill: $color-white;
 }
 
 .icon {
   height: 70px;
   width: auto;
   color: #f5f9fc;
+}
+
+.scaleIconSmall {
+  transform: scale(1.5);
+}
+
+.scaleIconBig {
+  transform: scale(2.5);
 }

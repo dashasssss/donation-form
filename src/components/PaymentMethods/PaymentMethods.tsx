@@ -9,13 +9,16 @@ type Props = {
 };
 
 export const PaymentMethodCard = ({ label, Icons, active, onClick }: Props) => {
+  const privatIconsldS = label === 'Приват24';
+  const webMoneyIcons = label === 'WebMoney';
+  
   return (
     <button
       type="button"
       onClick={onClick}
       className={`${styles.method} ${active ? styles.active : ''}`}
     >
-      <div className={styles.iconWrapper}>
+      <div className={`${styles.iconWrapper} ${privatIconsldS ? styles.scaleIconSmall : ''} ${webMoneyIcons ? styles.scaleIconBig : ''}`}>
         {Icons.map((Icon, index) => (
           <Icon
             key={index}

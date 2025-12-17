@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { Typography } from '../../components/Typography';
 import type { DonationType } from '../../types/donation';
 import styles from './DonationTypes.module.scss';
@@ -12,7 +12,13 @@ import WebmoneyIcon from '../../assets/icons/webmoney.svg?react';
 import PaypalIcon from '../../assets/icons/paypal.svg?react';
 import MastercardIcon from '../../assets/icons/mastercard.svg?react';
 
-export const DonationTypes = () => {
+type DonationTypesRef = {
+  reset: () => void;
+  validate: () => boolean;
+};
+
+
+export const DonationTypes = forwardRef<DonationTypesRef>((_, ref) => {
   const [type, setType] = useState<DonationType>('financial');
   type PaymentMethod = 'visa' | 'privat24' | 'terminal' | 'webmoney' | 'paypal';
 
@@ -21,14 +27,28 @@ export const DonationTypes = () => {
   const [expiry, setExpiry] = useState('');
   const [cvc, setCvc] = useState('');
 
+  const cardRefs = useRef<Array<HTMLInputElement | null>>([]);
+  const expiryRef = useRef<HTMLInputElement | null>(null);
+  const cvcRef = useRef<HTMLInputElement | null>(null);
+
   const handleCardNumberChange = (index: number, value: string) => {
     if (!/^\d*$/.test(value)) return;
 
+    const clean = value.slice(0, 4);
+
     setCardNumber((prev) => {
       const updated = [...prev];
-      updated[index] = value.slice(0, 4);
+      updated[index] = clean;
       return updated;
     });
+
+    if (clean.length === 4) {
+      if (index < 3) {
+        cardRefs.current[index + 1]?.focus();
+      } else {
+        expiryRef.current?.focus();
+      }
+    }
   };
 
   const handleExpiryChange = (value: string) => {
@@ -39,13 +59,41 @@ export const DonationTypes = () => {
     } else {
       setExpiry(`${digits.slice(0, 2)}/${digits.slice(2)}`);
     }
+
+    if (digits.length === 4) {
+      cvcRef.current?.focus();
+    }
   };
 
-  // const isPaymentValid =
-  // cardNumber.every((p) => p.length === 4) &&
-  // expiry.length === 5 &&
-  // cvc.length === 3;
+  useImperativeHandle(ref, () => ({
+    reset() {
+      setPaymentMethod('privat24');
+      setCardNumber(['', '', '', '']);
+      setExpiry('');
+      setCvc('');
+    },
 
+    validate() {
+    if (type !== 'financial') return true;
+
+    if (cardNumber.some((n) => n.length !== 4)) {
+      cardRefs.current[0]?.focus();
+      return false;
+    }
+
+    if (expiry.length !== 5) {
+      expiryRef.current?.focus();
+      return false;
+    }
+
+    if (cvc.length !== 3) {
+      cvcRef.current?.focus();
+      return false;
+    }
+
+    return true;
+  },
+  }));
 
   return (
     <section className={styles.section}>
@@ -123,7 +171,12 @@ export const DonationTypes = () => {
               </div>
             </div>
 
-            <div className={styles.cardForm}>
+          
+            <div className={`${styles.cardForm} ${
+                  paymentMethod === 'visa' || paymentMethod === 'privat24' ?
+                    styles.visible
+                  : styles.hidden
+                }`}>
               <Typography
                 as="h4"
                 variant="h4"
@@ -139,9 +192,13 @@ export const DonationTypes = () => {
                     {cardNumber.map((part, index) => (
                       <Input
                         key={index}
+                        placeholder=" "
                         value={part}
                         inputMode="numeric"
                         maxLength={4}
+                        ref={(el) => {
+                          cardRefs.current[index] = el;
+                        }}
                         onChange={(e) =>
                           handleCardNumberChange(index, e.target.value)
                         }
@@ -153,17 +210,21 @@ export const DonationTypes = () => {
                 <div className={styles.cardRow}>
                   <Input
                     label="Термін дії"
+                    placeholder=" "
                     inputMode="numeric"
                     value={expiry}
+                    ref={expiryRef}
                     onChange={(e) => handleExpiryChange(e.target.value)}
                   />
 
                   <Input
                     label="CVC/CVV"
+                    placeholder=" "
                     type="password"
                     value={cvc}
                     inputMode="numeric"
                     maxLength={3}
+                    ref={cvcRef}
                     onChange={(e) =>
                       setCvc(e.target.value.replace(/\D/g, '').slice(0, 3))
                     }
@@ -176,4 +237,4 @@ export const DonationTypes = () => {
       )}
     </section>
   );
-};
+});

@@ -2,8 +2,13 @@ import { Input } from '../../components/Input/Input';
 import { Typography } from '../../components/Typography';
 import styles from './DonationForm.module.scss';
 import { DonorTypeSwitch } from '../../components/DonorTypeSwitch/DonorTypeSwitch';
-import { useState } from 'react';
-import { useRef } from 'react';
+import {
+  forwardRef,
+  useImperativeHandle,
+  useState,
+  useRef,
+  useEffect,
+} from 'react';
 
 type FieldName =
   | 'firstName'
@@ -17,8 +22,16 @@ type FieldName =
   | 'state'
   | 'address';
 
-export const DonationForm = () => {
+type DonationFormRef = {
+  reset: () => void;
+  validate: () => boolean;
+};
+
+export const DonationForm = forwardRef<DonationFormRef>((_, ref) => {
   const [donorType, setDonorType] = useState<'person' | 'company'>('person');
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const logoInputRef = useRef<HTMLInputElement | null>(null);
+
   const [values, setValues] = useState<Record<FieldName, string>>({
     firstName: '',
     lastName: '',
@@ -58,88 +71,92 @@ export const DonationForm = () => {
     zip: null,
   });
 
+  useEffect(() => {
+    inputRefs.current.firstName?.focus();
+  }, []);
+
+  const LETTERS_REGEX = /^[A-Za-zА-Яа-яІіЇїЄєҐґʼ’\- ]+$/;
+
+  const required = (value: string) => (value.trim() ? null : 'Required');
+
+  const onlyLetters = (value: string) =>
+    LETTERS_REGEX.test(value) ? null : 'Only letters allowed';
+
+  const requiredLetters = (value: string) =>
+    required(value) || onlyLetters(value);
+
   const validators: Record<FieldName, (value: string) => string | null> = {
-    firstName: (v) => {
-      const value = v.trim();
+    firstName: requiredLetters,
+    lastName: requiredLetters,
+    country: requiredLetters,
+    state: requiredLetters,
+    city: requiredLetters,
 
-      if (!value) {
-        return 'Required';
-      }
-
-      if (!/^[A-Za-zА-Яа-яІіЇїЄєҐґʼ’\- ]+$/.test(value)) {
-        return 'Only letters allowed';
-      }
-
-      return null;
-    },
-
-    lastName: (v) => {
-      const value = v.trim();
-
-      if (!value) {
-        return 'Required';
-      }
-
-      if (!/^[A-Za-zА-Яа-яІіЇїЄєҐґʼ’\- ]+$/.test(value)) {
-        return 'Only letters allowed';
-      }
-
-      return null;
-    },
-
-    companyName: (v) => (v.trim() ? null : 'Required'),
+    companyName: required,
+    address: required,
 
     email: (v) =>
       /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? null : 'Invalid email',
 
     phone: (v) => (/^\+?\d{9,15}$/.test(v) ? null : 'Invalid phone number'),
 
-    country: (v) => {
-      const value = v.trim();
-
-      if (!value) {
-        return 'Required';
-      }
-
-      if (!/^[A-Za-zА-Яа-яІіЇїЄєҐґʼ’\- ]+$/.test(value)) {
-        return 'Only letters allowed';
-      }
-
-      return null;
-    },
-
-    state: (v) => {
-      const value = v.trim();
-
-      if (!value) {
-        return 'Required';
-      }
-
-      if (!/^[A-Za-zА-Яа-яІіЇїЄєҐґʼ’\- ]+$/.test(value)) {
-        return 'Only letters allowed';
-      }
-
-      return null;
-    },
-
-    city: (v) => {
-      const value = v.trim();
-
-      if (!value) {
-        return 'Required';
-      }
-
-      if (!/^[A-Za-zА-Яа-яІіЇїЄєҐґʼ’\- ]+$/.test(value)) {
-        return 'Only letters allowed';
-      }
-
-      return null;
-    },
-
-    address: (v) => (v.trim() ? null : 'Required'),
-
     zip: (v) => (/^\d{4,10}$/.test(v) ? null : 'Invalid ZIP'),
   };
+
+  useImperativeHandle(ref, () => ({
+    reset() {
+      setValues({
+        firstName: '',
+        lastName: '',
+        companyName: '',
+        country: '',
+        state: '',
+        address: '',
+        email: '',
+        phone: '',
+        city: '',
+        zip: '',
+      });
+
+      setErrors({
+        firstName: null,
+        lastName: null,
+        companyName: null,
+        email: null,
+        phone: null,
+        country: null,
+        state: null,
+        address: null,
+        city: null,
+        zip: null,
+      });
+
+      requestAnimationFrame(() => {
+        inputRefs.current.firstName?.focus();
+      });
+    },
+
+    validate() {
+      let isValid = true;
+      const newErrors: typeof errors = { ...errors };
+
+      (Object.keys(values) as FieldName[]).forEach((field) => {
+        const error = validators[field](values[field]);
+        newErrors[field] = error;
+
+        if (error && isValid) {
+          isValid = false;
+
+          requestAnimationFrame(() => {
+            inputRefs.current[field]?.focus();
+          });
+        }
+      });
+
+      setErrors(newErrors);
+      return isValid;
+    },
+  }));
 
   const handleEnter =
     (field: FieldName, nextField?: FieldName) =>
@@ -212,6 +229,7 @@ export const DonationForm = () => {
                 />
                 <Input
                   label="Фамілія"
+                  placeholder=" "
                   value={values.lastName}
                   error={errors.lastName ?? undefined}
                   ref={(el) => {
@@ -227,6 +245,7 @@ export const DonationForm = () => {
                 <div className={styles.inputWrap}>
                   <Input
                     label="Назва компанії, організації"
+                    placeholder=" "
                     value={values.companyName}
                     error={errors.companyName ?? undefined}
                     ref={(el) => {
@@ -237,12 +256,23 @@ export const DonationForm = () => {
                     }
                     onKeyDown={handleEnter('companyName', 'email')}
                   />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    ref={logoInputRef}
+                    style={{ display: 'none' }}
+                    onChange={(e) => {
+                      const file = e.target.files?.[0] ?? null;
+                      setLogoFile(file);
+                    }}
+                  />
 
                   <button
                     type="button"
                     className={styles.logoButton}
+                    onClick={() => logoInputRef.current?.click()}
                   >
-                    <span>+</span> Логотип
+                    <span>{logoFile ? '✓' : '+'}</span> Логотип
                   </button>
                 </div>
               </div>
@@ -250,6 +280,7 @@ export const DonationForm = () => {
               <Input
                 label="Email-адрес"
                 value={values.email}
+                placeholder=" "
                 error={errors.email ?? undefined}
                 ref={(el) => {
                   inputRefs.current.email = el;
@@ -262,6 +293,7 @@ export const DonationForm = () => {
               <Input
                 label="Номер телефону"
                 value={values.phone}
+                placeholder=" "
                 error={errors.phone ?? undefined}
                 ref={(el) => {
                   inputRefs.current.phone = el;
@@ -277,6 +309,7 @@ export const DonationForm = () => {
               <Input
                 label="Країна"
                 value={values.country}
+                placeholder=" "
                 error={errors.country ?? undefined}
                 ref={(el) => {
                   inputRefs.current.country = el;
@@ -289,6 +322,7 @@ export const DonationForm = () => {
               <div className={styles.row2}>
                 <Input
                   label="Місто"
+                  placeholder=" "
                   value={values.city}
                   error={errors.city ?? undefined}
                   ref={(el) => {
@@ -303,6 +337,7 @@ export const DonationForm = () => {
                 <Input
                   label="Штат, район"
                   value={values.state}
+                  placeholder=" "
                   error={errors.state ?? undefined}
                   ref={(el) => {
                     inputRefs.current.state = el;
@@ -315,6 +350,7 @@ export const DonationForm = () => {
               </div>
               <Input
                 label="Адреса"
+                placeholder=" "
                 value={values.address}
                 error={errors.address ?? undefined}
                 ref={(el) => {
@@ -328,6 +364,7 @@ export const DonationForm = () => {
               <div className={styles.row2}>
                 <Input
                   label="Поштовий індекс"
+                  placeholder=" "
                   value={values.zip}
                   error={errors.zip ?? undefined}
                   ref={(el) => {
@@ -345,4 +382,4 @@ export const DonationForm = () => {
       </div>
     </section>
   );
-};
+});

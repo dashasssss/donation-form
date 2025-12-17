@@ -30,9 +30,13 @@
   }
 
   &:focus {
-    outline: none;
-    border-color: 1px solid #2563eb;
-    background-color: #ffffff;
+    border-color: 1px solid $color-accent;
+    background-color: $color-white;
+  }
+
+  &:not(:placeholder-shown) {
+    border-color: $color-accent;
+    background-color: $color-white;
   }
 
   &:disabled {
@@ -42,9 +46,9 @@
 }
 
 .errorInput {
-  border-color: #ef4444;
+  border-color: $color-error;
 }
 
 .errorText {
-  color: #ef4444;
+  color: $color-error;
 }
