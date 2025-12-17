@@ -17,6 +17,35 @@ export const DonationTypes = () => {
   type PaymentMethod = 'visa' | 'privat24' | 'terminal' | 'webmoney' | 'paypal';
 
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('privat24');
+  const [cardNumber, setCardNumber] = useState(['', '', '', '']);
+  const [expiry, setExpiry] = useState('');
+  const [cvc, setCvc] = useState('');
+
+  const handleCardNumberChange = (index: number, value: string) => {
+    if (!/^\d*$/.test(value)) return;
+
+    setCardNumber((prev) => {
+      const updated = [...prev];
+      updated[index] = value.slice(0, 4);
+      return updated;
+    });
+  };
+
+  const handleExpiryChange = (value: string) => {
+    const digits = value.replace(/\D/g, '').slice(0, 4);
+
+    if (digits.length <= 2) {
+      setExpiry(digits);
+    } else {
+      setExpiry(`${digits.slice(0, 2)}/${digits.slice(2)}`);
+    }
+  };
+
+  // const isPaymentValid =
+  // cardNumber.every((p) => p.length === 4) &&
+  // expiry.length === 5 &&
+  // cvc.length === 3;
+
 
   return (
     <section className={styles.section}>
@@ -107,22 +136,17 @@ export const DonationTypes = () => {
                   <Typography variant="body">Номер карти</Typography>
 
                   <div className={styles.cardNumber}>
-                    <Input
-                      inputMode="numeric"
-                      maxLength={4}
-                    />
-                    <Input
-                      inputMode="numeric"
-                      maxLength={4}
-                    />
-                    <Input
-                      inputMode="numeric"
-                      maxLength={4}
-                    />
-                    <Input
-                      inputMode="numeric"
-                      maxLength={4}
-                    />
+                    {cardNumber.map((part, index) => (
+                      <Input
+                        key={index}
+                        value={part}
+                        inputMode="numeric"
+                        maxLength={4}
+                        onChange={(e) =>
+                          handleCardNumberChange(index, e.target.value)
+                        }
+                      />
+                    ))}
                   </div>
                 </div>
 
@@ -130,13 +154,19 @@ export const DonationTypes = () => {
                   <Input
                     label="Термін дії"
                     inputMode="numeric"
+                    value={expiry}
+                    onChange={(e) => handleExpiryChange(e.target.value)}
                   />
 
                   <Input
                     label="CVC/CVV"
                     type="password"
+                    value={cvc}
                     inputMode="numeric"
                     maxLength={3}
+                    onChange={(e) =>
+                      setCvc(e.target.value.replace(/\D/g, '').slice(0, 3))
+                    }
                   />
                 </div>
               </div>
