@@ -1,38 +1,62 @@
-import { Typography } from '../Typography';
 import styles from './PaymentMethods.module.scss';
+import { PaymentMethodCard } from '../PaymentMethodCard/PaymentMethodCard';
+import VisaIcon from '../../assets/icons/visa.svg?react';
+import PrivatIcon from '../../assets/icons/privatbank.svg?react';
+import TerminalIcon from '../../assets/icons/atm.svg?react';
+import WebmoneyIcon from '../../assets/icons/webmoney.svg?react';
+import PaypalIcon from '../../assets/icons/paypal.svg?react';
+import MastercardIcon from '../../assets/icons/mastercard.svg?react';
+import { Typography } from '../Typography';
+import type { PaymentMethod } from '../../types';
 
 type Props = {
-  label: string;
-  Icons: React.FC<React.SVGProps<SVGSVGElement>>[];
-  active: boolean;
-  onClick: () => void;
+  value: PaymentMethod;
+  onChange: (method: PaymentMethod) => void;
 };
 
-export const PaymentMethodCard = ({ label, Icons, active, onClick }: Props) => {
-  const privatIconsldS = label === 'Приват24';
-  const webMoneyIcons = label === 'WebMoney';
-  
+export const PaymentMethods = ({ value, onChange }: Props) => {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`${styles.method} ${active ? styles.active : ''}`}
-    >
-      <div className={`${styles.iconWrapper} ${privatIconsldS ? styles.scaleIconSmall : ''} ${webMoneyIcons ? styles.scaleIconBig : ''}`}>
-        {Icons.map((Icon, index) => (
-          <Icon
-            key={index}
-            className={styles.icon}
-          />
-        ))}
-      </div>
-      <Typography
-        as="span"
-        variant="small"
-        className={styles.label}
-      >
-        {label}
+    <div className={styles.methods}>
+      <Typography as="h4" variant="h4">
+        Спосіб оплати
       </Typography>
-    </button>
+
+      <div className={styles.methodsGrid}>
+        <PaymentMethodCard
+          label="Карта Visa/MasterCard"
+          Icons={[MastercardIcon, VisaIcon]}
+          active={value === 'visa'}
+          onClick={() => onChange('visa')}
+        />
+
+        <PaymentMethodCard
+          label="Приват24"
+          Icons={[PrivatIcon]}
+          active={value === 'privat24'}
+          onClick={() => onChange('privat24')}
+        />
+
+        <PaymentMethodCard
+          label="Термінали України"
+          Icons={[TerminalIcon]}
+          active={value === 'terminal'}
+          onClick={() => onChange('terminal')}
+        />
+
+        <PaymentMethodCard
+          label="WebMoney"
+          Icons={[WebmoneyIcon]}
+          active={value === 'webmoney'}
+          onClick={() => onChange('webmoney')}
+        />
+
+        <PaymentMethodCard
+          label="PayPal"
+          Icons={[PaypalIcon]}
+          active={value === 'paypal'}
+          onClick={() => onChange('paypal')}
+        />
+      </div>
+    </div>
   );
 };

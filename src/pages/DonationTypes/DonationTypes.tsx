@@ -1,26 +1,22 @@
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { Typography } from '../../components/Typography';
-import type { DonationType } from '../../types/donation';
+import type { DonationType } from '../../types';
 import styles from './DonationTypes.module.scss';
 import { DonationTypeTabs } from '../../components/DonationTypeTabs';
 import { Input } from '../../components/Input/Input';
-import { PaymentMethodCard } from '../../components/PaymentMethods/PaymentMethods';
-import VisaIcon from '../../assets/icons/visa.svg?react';
-import PrivatIcon from '../../assets/icons/privatbank.svg?react';
-import TerminalIcon from '../../assets/icons/atm.svg?react';
-import WebmoneyIcon from '../../assets/icons/webmoney.svg?react';
-import PaypalIcon from '../../assets/icons/paypal.svg?react';
-import MastercardIcon from '../../assets/icons/mastercard.svg?react';
+import clsx from 'clsx';
+import { PaymentMethods } from '../../components/PaymentMethods/PaymentMethods';
+import { DonationEmptyState } from '../../components/EmptyState/EmptyState';
+import type { PaymentMethod } from '../../types';
+
 
 type DonationTypesRef = {
   reset: () => void;
   validate: () => boolean;
 };
 
-
 export const DonationTypes = forwardRef<DonationTypesRef>((_, ref) => {
   const [type, setType] = useState<DonationType>('financial');
-  type PaymentMethod = 'visa' | 'privat24' | 'terminal' | 'webmoney' | 'paypal';
 
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('privat24');
   const [cardNumber, setCardNumber] = useState(['', '', '', '']);
@@ -74,25 +70,25 @@ export const DonationTypes = forwardRef<DonationTypesRef>((_, ref) => {
     },
 
     validate() {
-    if (type !== 'financial') return true;
+      if (type !== 'financial') return true;
 
-    if (cardNumber.some((n) => n.length !== 4)) {
-      cardRefs.current[0]?.focus();
-      return false;
-    }
+      if (cardNumber.some((n) => n.length !== 4)) {
+        cardRefs.current[0]?.focus();
+        return false;
+      }
 
-    if (expiry.length !== 5) {
-      expiryRef.current?.focus();
-      return false;
-    }
+      if (expiry.length !== 5) {
+        expiryRef.current?.focus();
+        return false;
+      }
 
-    if (cvc.length !== 3) {
-      cvcRef.current?.focus();
-      return false;
-    }
+      if (cvc.length !== 3) {
+        cvcRef.current?.focus();
+        return false;
+      }
 
-    return true;
-  },
+      return true;
+    },
   }));
 
   return (
@@ -113,7 +109,7 @@ export const DonationTypes = forwardRef<DonationTypesRef>((_, ref) => {
         </Typography>
       </div>
 
-      <div className={`grid ${styles.grid}`}>
+      <div className={clsx('grid', styles.grid)}>
         <div className={styles.tabsWrapper}>
           <DonationTypeTabs
             value={type}
@@ -122,61 +118,24 @@ export const DonationTypes = forwardRef<DonationTypesRef>((_, ref) => {
         </div>
       </div>
 
-      {type === 'financial' && (
+      {type === 'financial' ?
         <section className={styles.paymentSection}>
           <div className={`grid ${styles.paymentGrid}`}>
             <div className={styles.methods}>
-              <Typography
-                as="h4"
-                variant="h4"
-              >
-                Спосіб оплати
-              </Typography>
-
-              <div className={styles.methodsGrid}>
-                <PaymentMethodCard
-                  label="Карта Visa/MasterCard"
-                  Icons={[MastercardIcon, VisaIcon]}
-                  active={paymentMethod === 'visa'}
-                  onClick={() => setPaymentMethod('visa')}
-                />
-
-                <PaymentMethodCard
-                  label="Приват24"
-                  Icons={[PrivatIcon]}
-                  active={paymentMethod === 'privat24'}
-                  onClick={() => setPaymentMethod('privat24')}
-                />
-
-                <PaymentMethodCard
-                  label="Термінали України"
-                  Icons={[TerminalIcon]}
-                  active={paymentMethod === 'terminal'}
-                  onClick={() => setPaymentMethod('terminal')}
-                />
-
-                <PaymentMethodCard
-                  label="WebMoney"
-                  Icons={[WebmoneyIcon]}
-                  active={paymentMethod === 'webmoney'}
-                  onClick={() => setPaymentMethod('webmoney')}
-                />
-
-                <PaymentMethodCard
-                  label="PayPal"
-                  Icons={[PaypalIcon]}
-                  active={paymentMethod === 'paypal'}
-                  onClick={() => setPaymentMethod('paypal')}
-                />
-              </div>
+              <PaymentMethods
+                value={paymentMethod}
+                onChange={setPaymentMethod}
+              />
             </div>
 
-          
-            <div className={`${styles.cardForm} ${
-                  paymentMethod === 'visa' || paymentMethod === 'privat24' ?
-                    styles.visible
-                  : styles.hidden
-                }`}>
+            <div
+              className={clsx(styles.cardForm, {
+                [styles.visible]:
+                  paymentMethod === 'visa' || paymentMethod === 'privat24',
+                [styles.hidden]:
+                  paymentMethod !== 'visa' && paymentMethod !== 'privat24',
+              })}
+            >
               <Typography
                 as="h4"
                 variant="h4"
@@ -234,7 +193,7 @@ export const DonationTypes = forwardRef<DonationTypesRef>((_, ref) => {
             </div>
           </div>
         </section>
-      )}
+      : <DonationEmptyState />}
     </section>
   );
 });

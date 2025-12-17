@@ -82,6 +82,7 @@
 
     &.active::after {
       bottom: -2px;
+      z-index: 1;
 
       border-left: 10px solid transparent;
       border-right: 10px solid transparent;

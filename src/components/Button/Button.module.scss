@@ -1,5 +1,11 @@
 @use '../../styles/variables' as *;
 
+.buttonWrapper {
+  display: flex;
+  justify-content: center;
+  margin: 65px 0;
+}
+
 .button {
   position: relative;
 

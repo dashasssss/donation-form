@@ -14,6 +14,7 @@ export const Button = ({
   onClick,
 }: Props) => {
   return (
+    <div className={styles.buttonWrapper}>
     <button
       type={type}
       disabled={disabled}
@@ -22,5 +23,6 @@ export const Button = ({
     >
       {children}
     </button>
+    </div>
   );
 };

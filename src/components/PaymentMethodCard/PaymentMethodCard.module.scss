@@ -1,0 +1,59 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.method {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 15px 10px 5px;
+  border-radius: 8px;
+  background: $color-secondary;
+  color: #d7e3f0;
+
+  border: none;
+  cursor: pointer;
+
+  transition: all 0.3s ease;
+
+  width: 100%;
+
+  @include desktop {
+    width: 170px;
+  }
+
+  svg {
+    width: 60px;
+    height: 45px;
+    stroke: currentColor;
+  }
+  &.active {
+    background: $color-accent;
+  }
+
+  &:hover {
+    background: $color-secondary-accent;
+  }
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  fill: $color-white;
+}
+
+.icon {
+  height: 70px;
+  width: auto;
+  color: #f5f9fc;
+}
+
+.scaleIconSmall {
+  transform: scale(1.5);
+}
+
+.scaleIconBig {
+  transform: scale(2.5);
+}

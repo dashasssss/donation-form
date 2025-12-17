@@ -26,15 +26,10 @@
     background-color 0.5s;
 
   &:hover {
-    border-color: $color-secondary;
+    border-color: 1px solid $color-accent;
   }
 
   &:focus {
-    border-color: 1px solid $color-accent;
-    background-color: $color-white;
-  }
-
-  &:not(:placeholder-shown) {
     border-color: $color-accent;
     background-color: $color-white;
   }

@@ -1,0 +1,35 @@
+.toast {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  z-index: 1000;
+
+  padding: 14px 20px;
+  border-radius: 12px;
+
+  background: linear-gradient(90deg, #e94b6a, #936397);
+  color: #fff;
+  font-weight: 500;
+
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+
+  animation: toastIn 0.3s ease, toastOut 0.3s ease 2.2s;
+}
+
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes toastOut {
+  to {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}

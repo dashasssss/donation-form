@@ -1,21 +1,14 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Button } from './components/Button/Button';
 import { DonationForm } from './pages/DonationForm/DonationForm';
 import { DonationTypes } from './pages/DonationTypes/DonationTypes';
-
-type DonationFormRef = {
-  reset: () => void;
-  validate: () => boolean;
-};
-
-type DonationTypesRef = {
-  reset: () => void;
-  validate: () => boolean;
-};
+import type { DonationFormRef, DonationTypesRef } from './types';
+import { Toast } from './components/Toast/Toast';
 
 function App() {
   const donationFormRef = useRef<DonationFormRef | null>(null);
   const donationTypesRef = useRef<DonationTypesRef | null>(null);
+  const [showToast, setShowToast] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,26 +23,26 @@ function App() {
     donationFormRef.current?.reset();
     donationTypesRef.current?.reset();
 
-    console.log('SUBMIT');
+    setShowToast(true);
+    window.setTimeout(() => setShowToast(false), 2500);
   };
 
   return (
-    <main className="container">
-      <form onSubmit={handleSubmit}>
-        <DonationForm ref={donationFormRef} />
-        <DonationTypes ref={donationTypesRef} />
+    <>
+      <main className="container">
+        <form onSubmit={handleSubmit}>
+          <DonationForm ref={donationFormRef} />
+          <DonationTypes ref={donationTypesRef} />
 
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            margin: '80px 0',
-          }}
-        >
           <Button type="submit">Допомогти</Button>
-        </div>
-      </form>
-    </main>
+        </form>
+      </main>
+
+      <Toast
+        message="Дякуємо за вашу допомогу 💜"
+        visible={showToast}
+      />
+    </>
   );
 }
 

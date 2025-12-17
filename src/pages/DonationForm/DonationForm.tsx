@@ -2,6 +2,7 @@ import { Input } from '../../components/Input/Input';
 import { Typography } from '../../components/Typography';
 import styles from './DonationForm.module.scss';
 import { DonorTypeSwitch } from '../../components/DonorTypeSwitch/DonorTypeSwitch';
+import { DONOR_TYPES, type DonorType } from '../../types';
 import {
   forwardRef,
   useImperativeHandle,
@@ -9,6 +10,7 @@ import {
   useRef,
   useEffect,
 } from 'react';
+import clsx from 'clsx';
 
 type FieldName =
   | 'firstName'
@@ -28,7 +30,7 @@ type DonationFormRef = {
 };
 
 export const DonationForm = forwardRef<DonationFormRef>((_, ref) => {
-  const [donorType, setDonorType] = useState<'person' | 'company'>('person');
+  const [donorType, setDonorType] = useState<DonorType>(DONOR_TYPES.PERSON);
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const logoInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -158,6 +160,23 @@ export const DonationForm = forwardRef<DonationFormRef>((_, ref) => {
     },
   }));
 
+  const handleChange =
+  (field: FieldName) =>
+  (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    setValues((v) => ({
+      ...v,
+      [field]: value,
+    }));
+
+    setErrors((prev) => ({
+      ...prev,
+      [field]: validators[field](value),
+    }));
+  };
+
+
   const handleEnter =
     (field: FieldName, nextField?: FieldName) =>
     (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -212,7 +231,7 @@ export const DonationForm = forwardRef<DonationFormRef>((_, ref) => {
               The form is currently under development.
             </Typography>
           </div>
-        : <div className={`grid ${styles.grid}`}>
+        : <div className={clsx('grid', styles.grid)}>
             <div className={styles.left}>
               <div className={styles.row2}>
                 <Input
@@ -222,9 +241,7 @@ export const DonationForm = forwardRef<DonationFormRef>((_, ref) => {
                   ref={(el) => {
                     inputRefs.current.firstName = el;
                   }}
-                  onChange={(e) =>
-                    setValues((v) => ({ ...v, firstName: e.target.value }))
-                  }
+                  onChange={handleChange('firstName')}
                   onKeyDown={handleEnter('firstName', 'lastName')}
                 />
                 <Input
@@ -235,9 +252,7 @@ export const DonationForm = forwardRef<DonationFormRef>((_, ref) => {
                   ref={(el) => {
                     inputRefs.current.lastName = el;
                   }}
-                  onChange={(e) =>
-                    setValues((v) => ({ ...v, lastName: e.target.value }))
-                  }
+                  onChange={handleChange('lastName')}
                   onKeyDown={handleEnter('lastName', 'companyName')}
                 />
               </div>
@@ -251,9 +266,7 @@ export const DonationForm = forwardRef<DonationFormRef>((_, ref) => {
                     ref={(el) => {
                       inputRefs.current.companyName = el;
                     }}
-                    onChange={(e) =>
-                      setValues((v) => ({ ...v, companyName: e.target.value }))
-                    }
+                    onChange={handleChange('companyName')}
                     onKeyDown={handleEnter('companyName', 'email')}
                   />
                   <input
@@ -285,9 +298,7 @@ export const DonationForm = forwardRef<DonationFormRef>((_, ref) => {
                 ref={(el) => {
                   inputRefs.current.email = el;
                 }}
-                onChange={(e) =>
-                  setValues((v) => ({ ...v, email: e.target.value }))
-                }
+                onChange={handleChange('email')}
                 onKeyDown={handleEnter('email', 'phone')}
               />
               <Input
@@ -298,9 +309,7 @@ export const DonationForm = forwardRef<DonationFormRef>((_, ref) => {
                 ref={(el) => {
                   inputRefs.current.phone = el;
                 }}
-                onChange={(e) =>
-                  setValues((v) => ({ ...v, phone: e.target.value }))
-                }
+                onChange={handleChange('phone')}
                 onKeyDown={handleEnter('phone', 'country')}
               />
             </div>
@@ -314,9 +323,7 @@ export const DonationForm = forwardRef<DonationFormRef>((_, ref) => {
                 ref={(el) => {
                   inputRefs.current.country = el;
                 }}
-                onChange={(e) =>
-                  setValues((v) => ({ ...v, country: e.target.value }))
-                }
+                onChange={handleChange('country')}
                 onKeyDown={handleEnter('country', 'city')}
               />
               <div className={styles.row2}>
@@ -328,9 +335,7 @@ export const DonationForm = forwardRef<DonationFormRef>((_, ref) => {
                   ref={(el) => {
                     inputRefs.current.city = el;
                   }}
-                  onChange={(e) =>
-                    setValues((v) => ({ ...v, city: e.target.value }))
-                  }
+                  onChange={handleChange('city')}
                   onKeyDown={handleEnter('city', 'state')}
                 />
 
@@ -342,9 +347,7 @@ export const DonationForm = forwardRef<DonationFormRef>((_, ref) => {
                   ref={(el) => {
                     inputRefs.current.state = el;
                   }}
-                  onChange={(e) =>
-                    setValues((v) => ({ ...v, state: e.target.value }))
-                  }
+                  onChange={handleChange('state')}
                   onKeyDown={handleEnter('state', 'address')}
                 />
               </div>
@@ -356,9 +359,7 @@ export const DonationForm = forwardRef<DonationFormRef>((_, ref) => {
                 ref={(el) => {
                   inputRefs.current.address = el;
                 }}
-                onChange={(e) =>
-                  setValues((v) => ({ ...v, address: e.target.value }))
-                }
+                onChange={handleChange('address')}
                 onKeyDown={handleEnter('address', 'zip')}
               />
               <div className={styles.row2}>
@@ -370,9 +371,7 @@ export const DonationForm = forwardRef<DonationFormRef>((_, ref) => {
                   ref={(el) => {
                     inputRefs.current.zip = el;
                   }}
-                  onChange={(e) =>
-                    setValues((v) => ({ ...v, zip: e.target.value }))
-                  }
+                  onChange={handleChange('zip')}
                   onKeyDown={handleEnter('zip')}
                 />
               </div>
